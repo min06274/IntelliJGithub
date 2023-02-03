@@ -6,6 +6,7 @@ class ShoppingCategory {
         for (category in categories) {
             println(category)
         }
+         println("=> 장바구니로 이동하시려면 #을 입력해주세요")
 
         var selectedCategory = readLine()
 
@@ -15,7 +16,8 @@ class ShoppingCategory {
         }
 
          if(selectedCategory== "#"){
-             //TODO 1. 장바구니 이동
+             val shoppingCart = ShoppingCart()
+             shoppingCart.showCartItems()
          }
          else {
             if(categories.contains(selectedCategory)){
