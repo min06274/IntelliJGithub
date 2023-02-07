@@ -14,7 +14,9 @@ object CartItems {
             mutableProducts[product] = it+1
         }?: kotlin.run{
             mutableProducts[product] = 1
+
         }
+
 
     }
 }
