@@ -2,31 +2,72 @@ package screen
 
 import LINE_DIVIDER
 import data.CartItems
+import extensions.getNotEmptyString
 
-//장바구니에 추가된 상품 목록 보여줘야함
-class ShoppingCart :Screen(){
+class ShoppingCart  {
     private val products = CartItems.products
-    fun showCartItems(){
-        ScreenStack.push(this)
-        if(products.isNotEmpty()){
+
+    fun showCartItems() {
+        //ScreenStack.push(this)
+        if (products.isNotEmpty()) {
             println(
                 products.keys.joinToString(
                     separator = ", \n",
                     prefix = """
-                        ${LINE_DIVIDER}
-                        장바구니에 담은 상품 목록입니다.
-                    """.trimIndent()
-                ){
-                    product->"카테고리: ${product.categoryLabel} / 상품명: ${product.name} / 수량 : ${products[product]}"
+                    $LINE_DIVIDER
+                    장바구니에 담은 상품 목록 입니다.
+                    
+                """.trimIndent()
+                ) { product ->
+                    "카테고리: ${product.categoryLabel} / 상품명: ${product.name} / 수량: ${products[product]}"
                 }
             )
-        }else{
-            println("""
-                장바구니에 담긴 상품이 없습니다.
-            """.trimIndent())
+        } else {
+            println(
+                """
+                장바구니에 담긴 상품이 없습니다. 
+                """.trimIndent()
+            )
+        }
+        showPreviousScreenOption()
+    }
+
+    private fun showPreviousScreenOption() {
+        println(
+            """
+                $LINE_DIVIDER
+                이전 화면으로 돌아가시겠습니까? (y/n)
+            """.trimIndent()
+        )
+        when (readLine().getNotEmptyString()) {
+            "y" -> {
+                moveToPreviousScreen()
+            }
+            "n" -> {
+                showCartItems()
+            }
+            else -> {
+                // TODO 재입력 요청
+            }
+        }
+    }
+
+    private fun moveToPreviousScreen() {
+        when (val previousScreen = ScreenStack.peek()) {
+            is ShoppingCategory -> {
+                println("현재 스택 마지막에 ShoppingCategory입니다. 스택에서 삭제하고 재호출합니다")
+                ScreenStack.pop()
+                previousScreen.showCategories()
+            }
+            is ShoppingProductList -> {
+                println("현재 스택 마지막에 showProducts입니다. 스택에서 삭제하고 재호출합니다")
+                ScreenStack.pop()
+                previousScreen.showProducts()
+            }
+            else->{
+
+            }
         }
 
-        }
+    }
 }
-
-
